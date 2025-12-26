@@ -1,4 +1,73 @@
-1. Install Argo CD
+# 1. Install Argo CD
 
-kubectl create namespace argocd
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+- kubectl create namespace argocd
+- kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+# 2. Download Argo CD CLI in local machine and as well as on master node.
+
+a. For Mac
+ - brew install argocd
+ 
+b. For linux machine
+
+Step 1: Update System Packages
+- sudo apt update && sudo apt upgrade -y
+
+Step 2: Download the Latest ArgoCD CLI Binary
+- curl -sSL -o argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+
+Step 3: Move Binary to System Path
+- chmod +x argocd
+- sudo mv argocd /usr/local/bin/
+
+Step 4: Verify Installation
+- argocd version
+
+## You should see output similar to:
+argocd: v2.12.0+<commit-hash>
+  BuildDate: 2025-09-25T00:00:00Z
+  GitCommit: <hash>
+  GitTreeState: clean
+  GoVersion: go1.22.4
+
+# 3. Access The Argo CD API Server
+
+## Service Type NodePort
+
+- kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort"}}'
+
+# 4. Login Using The CLI
+
+a. Username: admin
+
+b. The initial password for the admin account is auto-generated and stored as clear text in the field password in a secret named argocd-initial-admin-secret in your Argo CD installation namespace. You can simply retrieve this password using the argocd CLI:
+
+- argocd admin initial-password -n argocd
+
+c. Using the username admin and the password from above, login to Argo CD's IP or hostname:
+
+- argocd login <ARGOCD_SERVER:Port>
+
+Note: to list the port info, use kubectl get svc -n argocd
+
+d. Change the password using the command:
+- argocd account update-password
+
+# 5. Register A Cluster To Deploy Apps To
+
+## Here we should use the local context what we created for our laptop in order to interact with the K8S cluster.
+
+a. Login to local machine, update the public IP of mater node accordingly first, later login to the Argocd server and execute below commands,
+
+- kubectl config get-contexts -o name
+## Note: you will get the context name here.
+
+- argocd cluster add <context_name>
+
+# 6. create an Application yaml file on Github and clone to the Master node, use below commands in oder to create the Application via CLI,
+
+- kubectl apply -f application.yaml
+
+- kubectl get app -n argocd
+## Note: to see the info about the applied config of Application object.
+
