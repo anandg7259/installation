@@ -6,9 +6,9 @@ metadata:
 spec:
   project: test-project
   source:
-    repoURL: https://github.com/anandg7259/private_repo.git
+    repoURL: https://github.com/anandg7259/installation.git
     targetRevision: main
-    path: k8s folder/Argocd
+    path: k8s-config/argocd
   destination:
     server: https://13.48.248.233:6443
     namespace: default
