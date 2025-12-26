@@ -53,6 +53,11 @@ Note: to list the port info, use kubectl get svc -n argocd
 d. Change the password using the command:
 - argocd account update-password
 
+e. Login to the server via <server_ip><nodeport>
+
+- create an project first, and mention source and Destiona as "*"
+- Also update the Git repo url address in the settings-Repositry
+
 # 5. Register A Cluster To Deploy Apps To
 
 ## Here we should use the local context what we created for our laptop in order to interact with the K8S cluster.
